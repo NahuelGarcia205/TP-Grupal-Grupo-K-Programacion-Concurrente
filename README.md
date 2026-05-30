@@ -6,6 +6,7 @@ Trabajo práctico grupal de la materia Programación Concurrente.
 - Nahuel Nicolas Garcia
 - Santino Grimaldi
 - David Paulo Ibañes
+- Morana Juan Ignacio
 
 ## Descripción
 Proyecto desarrollado en C++ orientado al estudio e implementación de conceptos de programación concurrente.
