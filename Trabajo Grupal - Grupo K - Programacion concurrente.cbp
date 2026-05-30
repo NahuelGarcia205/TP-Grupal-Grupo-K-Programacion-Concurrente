@@ -32,6 +32,8 @@
 			<Add option="-Wall" />
 			<Add option="-fexceptions" />
 		</Compiler>
+		<Unit filename="globales.cpp" />
+		<Unit filename="globales.h" />
 		<Unit filename="main.cpp" />
 		<Unit filename="paquete.h" />
 		<Unit filename="prioridades.h" />
