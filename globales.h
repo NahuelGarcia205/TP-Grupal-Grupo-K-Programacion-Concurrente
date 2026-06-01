@@ -4,7 +4,7 @@
 #include <vector>
 #include <mutex>
 #include "paquete.h"
-#include "semaforo.h"
+#include "semaforos.h"
 #include "prioridades.h"
 
 using namespace std;
@@ -20,6 +20,7 @@ extern mutex mtxConsola;
 extern mutex mtxMetricas;
 extern mutex mtxLiberacion;
 extern mutex mtxAsignacion;
+extern mutex mtxRand;
 
 // SEMAFOROS
 extern Semaforo espaciosDisponibles;

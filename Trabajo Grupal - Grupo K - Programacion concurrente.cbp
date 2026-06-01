@@ -37,6 +37,8 @@
 		<Unit filename="main.cpp" />
 		<Unit filename="paquete.h" />
 		<Unit filename="prioridades.h" />
+		<Unit filename="procesamiento.cpp" />
+		<Unit filename="procesamiento.h" />
 		<Unit filename="semaforos.cpp" />
 		<Unit filename="semaforos.h" />
 		<Extensions>

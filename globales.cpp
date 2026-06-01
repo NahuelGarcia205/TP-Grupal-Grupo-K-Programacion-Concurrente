@@ -13,6 +13,7 @@ mutex mtxConsola;
 mutex mtxMetricas;
 mutex mtxLiberacion;
 mutex mtxAsignacion;
+mutex mtxRand;
 
 // SEMAFOROS
 Semaforo espaciosDisponibles;
