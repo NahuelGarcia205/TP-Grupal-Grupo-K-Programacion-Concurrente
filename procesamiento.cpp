@@ -9,6 +9,7 @@ using namespace std;
 
 void productor(int idProductor, int cantidadPaquetes)
 {
+    srand(time(0));// agregado a la fuerza para romper la semilla pero sigue funcionando a bloques
     for(int i =0;i<cantidadPaquetes;i++)
     {
         Paquete p;

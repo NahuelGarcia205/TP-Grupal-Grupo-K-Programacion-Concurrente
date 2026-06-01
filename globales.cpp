@@ -23,7 +23,7 @@ Semaforo paquetesDisponibles;
 int idGlobal = 1;
 bool finProduccion = false;
 int paquetes = 20;
-int CANT_PRODUCTORES = 3;
+int CANT_PRODUCTORES = 2;
 int CANT_CONSUMIDORES = 2;
 int cantidadBase = paquetes / CANT_PRODUCTORES;
 int resto = paquetes % CANT_PRODUCTORES;
