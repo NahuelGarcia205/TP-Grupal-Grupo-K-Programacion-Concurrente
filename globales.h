@@ -9,7 +9,7 @@
 
 using namespace std;
 
-extern priority_queue<Paquete,vector<Paquete>,ComparadorPaquetes> colaEspera;
+extern queue<Paquete> colaEspera;
 extern queue<Paquete> colaProcesamiento;
 
 // MUTEX

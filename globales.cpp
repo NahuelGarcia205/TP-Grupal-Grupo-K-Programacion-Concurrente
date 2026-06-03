@@ -2,7 +2,7 @@
 
 using namespace std;
 
-priority_queue<Paquete,vector<Paquete>,ComparadorPaquetes> colaEspera;
+queue<Paquete> colaEspera;
 queue<Paquete> colaProcesamiento;
 
 // MUTEX

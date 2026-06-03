@@ -54,16 +54,70 @@ void consumidor(int idConsumidor)
                 }
                 continue;
             }
-            p = colaEspera.top();
-            colaEspera.pop();
-        }
+
+        queue<Paquete> aux;
         long tiempoActual = time(0);
 
-        if(p.prioridad == 0 && (tiempoActual - p.tiempoIngreso)>=6)
+        bool agingAplicado = false;
+        bool altaEncontrada = false;
+
+        while(!colaEspera.empty())
         {
-            p.prioridad = 1;
-            lock_guard<mutex> lockC(mtxConsola);
-            cout<<"[AGING] paquete "<< p.id<<" subio a prioridad ALTA"<<endl;
+            Paquete actual = colaEspera.front();
+            colaEspera.pop();
+
+            if(!agingAplicado && actual.prioridad == 0 && (tiempoActual - actual.tiempoIngreso) >= 6)
+            {
+                actual.prioridad=1;
+                p = actual;
+                agingAplicado = true;
+
+                {
+                    lock_guard<mutex> lockC(mtxConsola);
+                    cout << "[AGING] paquete "<< actual.id<< " subio a prioridad ALTA"<< endl;
+                }
+
+                continue;
+            }
+
+            aux.push(actual);
+        }
+
+        //si no hubo aging, buscar la primera prioridad alta
+        if(!agingAplicado)
+        {
+            queue<Paquete> temp;
+            while(!aux.empty())
+            {
+                Paquete actual = aux.front();
+                aux.pop();
+
+                if(!altaEncontrada &&actual.prioridad == 1)
+                {
+                    p = actual;
+                    altaEncontrada = true;
+                    continue;
+                }
+
+                temp.push(actual);
+            }
+
+            aux = temp;
+        }
+
+            //si tampoco hubo prioridad alta -> FIFO
+            if(!agingAplicado && !altaEncontrada)
+            {
+                p = aux.front();
+                aux.pop();
+            }
+
+            //reconstruir cola
+            while(!aux.empty())
+            {
+                colaEspera.push(aux.front());
+                aux.pop();
+            }
         }
 
         wait(espaciosDisponibles);
@@ -72,11 +126,15 @@ void consumidor(int idConsumidor)
 
             this_thread::sleep_for(chrono::milliseconds(420)); //420
 
-
             {
                 lock_guard<mutex> lockCola(mtxColaProcesamiento);
                 colaProcesamiento.push(p);
-                //cout << "[PROCESANDO] tamanio actual: "<< colaProcesamiento.size() << endl; //solo para 8 paquetes
+                /* //solo para 8 paquetes
+                {
+                    lock_guard<mutex> lockConsola(mtxConsola);
+                    cout << "[PROCESANDO] tamanio actual: "<< colaProcesamiento.size() << endl; //solo para 8 paquetes
+                }
+                */
             }
         }
 
@@ -89,7 +147,7 @@ void consumidor(int idConsumidor)
 
         {
             lock_guard<mutex> lockL(mtxLiberacion);
-            this_thread::sleep_for(chrono::milliseconds(270)); // 270
+            this_thread::sleep_for(chrono::milliseconds(270)); //270
 
             {
                 lock_guard<mutex> lockPros(mtxColaProcesamiento);
@@ -97,7 +155,9 @@ void consumidor(int idConsumidor)
                 {
                     long tiempoFinal = time(0);
                     double tiempoEspera = tiempoFinal - p.tiempoIngreso;
+
                     lock_guard<mutex> lockMet(mtxMetricas);
+
                     if(p.prioridadOriginal == 1)
                     {
                         totalAlta++;
@@ -108,16 +168,18 @@ void consumidor(int idConsumidor)
                         totalBaja++;
                         esperaBaja += tiempoEspera;
                     }
-                colaProcesamiento.pop();
-                lock_guard<mutex> lock2(mtxConsola);
-                cout<<"[CONSUMIDOR "<<idConsumidor<<"] finalizo paquete "<<p.id<<endl;
+
+                    colaProcesamiento.pop();
+                    lock_guard<mutex> lock2(mtxConsola);
+                    cout<< "[CONSUMIDOR "<< idConsumidor<< "] finalizo paquete "<< p.id<< endl;
                 }
             }
         }
 
         signal(espaciosDisponibles);
-
     }
+
     lock_guard<mutex> lockC(mtxConsola);
-    cout<<"[CONSUMIDOR "<<idConsumidor<<"] termino ejecucion."<<endl;
+
+    cout <<"[CONSUMIDOR "<< idConsumidor<< "] termino ejecucion."<< endl;
 }
